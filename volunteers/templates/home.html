@@ -1,36 +1,28 @@
 {% extends 'base.html' %}
-{% load static %}  {# Ensure this is at the top to use {% static %} #}
+{% load static %}
 
 {% block title %}Jansuraj Volunteers{% endblock %}
 
 {% block content %}
-<div class="mt-32">
-    <!-- Hero Section -->
-    <header class="text-center py-12">
-        <h2 class="text-3xl font-bold">Welcome to Jansuraj Volunteers</h2>
-        <p class="text-lg text-gray-700 mt-2">Join us and make a difference in society.</p>
-    </header>
-
-    <!-- Image Carousel -->
-    <div class="relative w-full max-w-4xl mx-auto overflow-hidden">
-        <div class="flex">
-            <img src="{% static 'image1.jpg' %}" class="w-full h-64 object-cover rounded-lg shadow-md">
-            <img src="{% static 'image2.jpg' %}" class="w-full h-64 object-cover rounded-lg shadow-md hidden">
-        </div>
-    </div>
-
+<div class="mt-2">
     <!-- Video Message -->
     <div class="text-center mt-8">
-        <h3 class="text-2xl font-semibold">A Message from Our Team</h3>
-        <div id="video-container" class="w-full max-w-3xl mx-auto mt-4 rounded-lg shadow-lg"></div>
+        <h3 class="text-2xl font-semibold">A Message from Prashant Kishor</h3>
+        <div id="video-container" class="w-full max-w-2xl mx-auto mt-4 relative rounded-lg shadow-lg aspect-video">
+            <!-- Unmute button -->
+            <button id="unmute-btn" class="absolute top-2 left-2 bg-black text-white px-3 py-1 rounded hidden">
+                🔊 Unmute
+            </button>
+        </div>
     </div>
 </div>
 {% endblock %}
 
 {% block extra_js %}
 <script>
-    const videoUrl = "https://youtu.be/TQf-fkbQSss?si=m3SMejoGI6XacYKK";  // Change this URL dynamically if needed
+    const videoUrl = "https://yo1utu.be111/TQf-fkbQSss?si=m3SMejoGI6XacYKK";  
     const videoContainer = document.getElementById("video-container");
+    const unmuteBtn = document.getElementById("unmute-btn");
 
     function isYouTubeUrl(url) {
         return url.includes("youtube.com") || url.includes("youtu.be");
@@ -39,18 +31,40 @@
     if (isYouTubeUrl(videoUrl)) {
         const videoId = videoUrl.split("youtu.be/")[1]?.split("?")[0] || videoUrl.split("v=")[1]?.split("&")[0];
         videoContainer.innerHTML = `
-            <iframe class="w-full h-64 rounded-lg shadow-lg" 
-                src="https://www.youtube.com/embed/${videoId}" 
+            <iframe id="youtube-video" class="w-full h-full rounded-lg shadow-lg" 
+                src="https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1" 
                 frameborder="0" 
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
                 allowfullscreen>
             </iframe>`;
+
+        // Unmute for YouTube requires API (optional: load YouTube iframe API)
+        unmuteBtn.classList.remove("hidden");
+        unmuteBtn.addEventListener("click", function () {
+            alert("Unmuting YouTube videos via button isn't allowed due to browser policies. Please use the player controls.");
+        });
+
     } else {
         videoContainer.innerHTML = `
-            <video class="w-full max-w-3xl mx-auto rounded-lg shadow-lg" controls>
-                <source src="${videoUrl}" type="video/mp4">
+           <video id="custom-video" class="w-full h-full rounded-lg shadow-lg" autoplay muted controls>
+             <source src="{% static 'title_video.mp4' %}" type="video/mp4">
                 Your browser does not support the video tag.
             </video>`;
+
+        const video = document.getElementById("custom-video");
+
+        // Show unmute button only if the video is muted
+        video.addEventListener("loadedmetadata", function () {
+            if (video.muted) {
+                unmuteBtn.classList.remove("hidden");
+            }
+        });
+
+        // Unmute the video when button is clicked
+        unmuteBtn.addEventListener("click", function () {
+            video.muted = false;
+            unmuteBtn.classList.add("hidden"); // Hide button after unmuting
+        });
     }
 </script>
 {% endblock %}
