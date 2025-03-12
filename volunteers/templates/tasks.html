@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Your Tasks - Jansuraj Volunteers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-white flex flex-col min-h-screen">
+
+    {% include 'navbar.html' %}  <!-- Navbar added at the top -->
+
+    <div class="container mx-auto px-4 mt-16 py-8 flex-grow">
+        <div class="bg-white shadow-lg rounded-lg p-6">
+            <h2 class="text-2xl font-bold text-center mb-6">Your Assigned Tasks</h2>
+
+            {% if tasks %}
+                <div class="overflow-x-auto">
+                    <table class="min-w-full bg-white border border-gray-300">
+                        <thead class="bg-yellow-500 text-white">
+                            <tr>
+                                <th class="py-2 px-4 border">#</th>
+                                <th class="py-2 px-4 border">Title</th>
+                                <th class="py-2 px-4 border">Description</th>
+                                <th class="py-2 px-4 border">Status</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for task in tasks %}
+                                <tr class="border-t">
+                                    <td class="py-2 px-4 border text-center">{{ forloop.counter }}</td>
+                                    <td class="py-2 px-4 border">{{ task.title }}</td>
+                                    <td class="py-2 px-4 border">{{ task.description }}</td>
+                                    <td class="py-2 px-4 border text-center">
+                                        {% if task.completed %}
+                                            <span class="text-green-600 font-bold">Completed</span>
+                                        {% else %}
+                                            <span class="text-red-600 font-bold">Pending</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% else %}
+                <p class="text-center text-gray-600">No tasks assigned yet.</p>
+            {% endif %}
+
+            {% comment %} <a href="{% url 'profile' %}" class="mt-4 w-full bg-yellow-500 text-white py-2 px-4 rounded-lg block text-center hover:bg-yellow-600">
+                Back to Profile
+            </a> {% endcomment %}
+        </div>
+    </div>
+  <!-- Footer -->
+  {% include 'footer.html' %}   
+</body>
+</html>

@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>Volunteer Registration</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    {% include 'navbar.html' %}
+    
+    <div class="flex justify-center flex-grow mt-16">
+        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md border border-gray-300"> 
+            <h2 class="text-2xl font-bold text-center mb-6">REGISTER AS A VOLUNTEER</h2>
+
+            <!-- Success and Error Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                    <div class="p-4 mb-4 text-white {{ message.tags }} rounded-lg" role="alert">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            {% endif %}
+
+            <form method="POST" class="space-y-4" id="registrationForm">
+                {% csrf_token %}
+
+                <h3 class="text-lg font-semibold">Account Details</h3>
+                <div>
+                    <label class="block text-gray-700">Username <span class="text-red-500">*</span></label>
+                    {{ user_form.username }}
+                    <p class="text-red-500 text-sm">{{ user_form.username.errors }}</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Email <span class="text-red-500">*</span></label>
+                    {{ user_form.email }}
+                    <p class="text-red-500 text-sm">{{ user_form.email.errors }}</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Password <span class="text-red-500">*</span></label>
+                    {{ user_form.password }}
+                    <p class="text-red-500 text-sm">{{ user_form.password.errors }}</p>
+                </div>
+
+                <h3 class="text-lg font-semibold">Personal Details</h3>
+                <div>
+                    <label class="block text-gray-700">Full Name <span class="text-red-500">*</span></label>
+                    {{ profile_form.name }}
+                    <p class="text-red-500 text-sm">{{ profile_form.name.errors }}</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Gender <span class="text-red-500">*</span></label>
+                    {{ profile_form.gender }}
+                    <p class="text-red-500 text-sm">{{ profile_form.gender.errors }}</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Age <span class="text-red-500">*</span></label>
+                    {{ profile_form.age }}
+                    <p class="text-red-500 text-sm">{{ profile_form.age.errors }}</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Village</label>
+                    {{ profile_form.village }}
+                </div>
+                <div>
+                    <label class="block text-gray-700">Block</label>
+                    {{ profile_form.block }}
+                </div>
+                <div>
+                    <label class="block text-gray-700">District</label>
+                    {{ profile_form.district }}
+                </div>
+                <div>
+                    <label class="block text-gray-700">State</label>
+                    {{ profile_form.state }}
+                </div>
+                <div>
+                    <label class="block text-gray-700">Pin Code <span class="text-red-500">*</span></label>
+                    {{ profile_form.pin_code }}
+                    <p class="text-red-500 text-sm">{{ profile_form.pin_code.errors }}</p>
+                </div>
+                <div>
+                    <label class="block text-gray-700">Contribution Area</label>
+                    {{ profile_form.contribution_area }}
+                </div>
+
+                <button type="submit" class="w-full bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600">
+                    Register
+                </button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById("registrationForm").addEventListener("submit", function(event) {
+            let errors = false;
+            let fields = ["username", "email", "password", "age", "pin_code"];
+            fields.forEach(field => {
+                let input = document.querySelector(`[name="${field}"]`);
+                if (input && input.value.trim() === "") {
+                    errors = true;
+                    input.classList.add("border-red-500");
+                    let errorText = document.createElement("p");
+                    errorText.className = "text-red-500 text-sm";
+                    errorText.innerText = "This field is required";
+                    input.parentNode.appendChild(errorText);
+                }
+            });
+            
+            if (errors) event.preventDefault();
+        });
+    </script>
+      <!-- Footer -->
+      {% include 'footer.html' %}   
+</body>
+</html>
