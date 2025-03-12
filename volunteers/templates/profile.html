@@ -1,35 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Profile - Jansuraj Volunteers</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-white flex flex-col min-h-screen">
+{% extends 'base.html' %}
+{% load static %}
 
-    {% include 'navbar.html' %}  <!-- Navbar added at the top -->
+{% block title %}Profile - Jansuraj Volunteers{% endblock %}
 
-    <div class="flex justify-center mt-16 flex-grow items-center">
-        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-            <h2 class="text-2xl font-bold text-center mb-6">Your Profile</h2>
-            <p><strong>Name:</strong> {{ profile.name }}</p>
-            <p><strong>Gender:</strong> {{ profile.gender }}</p>
-            <p><strong>Age:</strong> {{ profile.age }}</p>
-            <p><strong>Village:</strong> {{ profile.village }}</p>
-            <p><strong>Block:</strong> {{ profile.block }}</p>
-            <p><strong>District:</strong> {{ profile.district }}</p>
-            <p><strong>State:</strong> {{ profile.state }}</p>
-            <p><strong>Pin Code:</strong> {{ profile.pin_code }}</p>
-            <p><strong>Contribution Area:</strong> {{ profile.contribution_area }}</p>
+{% block content %}
+<div class="flex justify-center mt-16 flex-grow items-center px-4">
+    <div class="bg-white shadow-xl rounded-lg p-10 w-full max-w-3xl border border-gray-200">
+        <h2 class="text-3xl font-semibold text-center text-gray-800">Your Profile</h2>
+        <hr class="my-4 border-t-2 border-gray-300">
 
-            {% comment %} <a href="{% url 'tasks' %}" class="mt-4 w-full bg-blue-600 text-white py-2 px-4 rounded-lg block text-center hover:bg-blue-700">
-                View Assigned Tasks
-            </a>
-            <a href="{% url 'logout' %}" class="mt-4 w-full bg-red-600 text-white py-2 px-4 rounded-lg block text-center hover:bg-red-700">
-                Logout
-            </a> {% endcomment %}
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg font-medium text-gray-700">
+            <p><span class="font-semibold text-gray-900">Name:</span> {{ profile.name }}</p>
+            <p><span class="font-semibold text-gray-900">Gender:</span> {{ profile.gender }}</p>
+            <p><span class="font-semibold text-gray-900">Age:</span> {{ profile.age }}</p>
+            <p><span class="font-semibold text-gray-900">Village:</span> {{ profile.village }}</p>
+            <p><span class="font-semibold text-gray-900">Block:</span> {{ profile.block }}</p>
+            <p><span class="font-semibold text-gray-900">District:</span> {{ profile.district }}</p>
+            <p><span class="font-semibold text-gray-900">State:</span> {{ profile.state }}</p>
+            <p><span class="font-semibold text-gray-900">Pin Code:</span> {{ profile.pin_code }}</p>
+            <p class="col-span-1 md:col-span-2"><span class="font-semibold text-gray-900">Contribution Area:</span> {{ profile.contribution_area }}</p>
         </div>
     </div>
-  <!-- Footer -->
-  {% include 'footer.html' %}   
-</body>
-</html>
+</div>
+{% endblock %}

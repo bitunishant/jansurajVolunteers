@@ -3,7 +3,7 @@ from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.forms import AuthenticationForm
 from django.contrib.auth.decorators import login_required
 from .models import Task, UserProfile
-from .forms import UserRegistrationForm, UserProfileForm
+from .forms import UserRegistrationForm, UserProfileForm,CustomAuthenticationForm
 
 # Home Page View
 def home(request):
@@ -34,13 +34,13 @@ def register(request):
 # Login View
 def user_login(request):
     if request.method == "POST":
-        form = AuthenticationForm(request, data=request.POST)
+        form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
             return redirect("tasks")  # Redirect to profile after login
     else:
-        form = AuthenticationForm()
+        form = CustomAuthenticationForm()
 
     return render(request, "login.html", {"form": form})
 

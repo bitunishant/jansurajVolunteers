@@ -1,47 +1,57 @@
 <!-- templates/navbar.html -->
-<nav class="fixed top-0 left-0 w-full bg-yellow-500 p-4 shadow-md flex justify-between items-center z-50">
+{% load static %}
+<link rel="icon" type="image/x-icon" href="{% static 'favicon.ico' %}">
+<nav class="fixed top-0 mt-8 left-0 w-full bg-gradient-to-r from-yellow-500 to-yellow-900 p-2 shadow-lg flex justify-between items-center z-50 backdrop-blur-md">
     <!-- Logo -->
-    <div class="flex items-center">
+    <div class="relative">
         <a href="{% url 'home' %}" class="flex items-center">
-            <img src="https://en.wikipedia.org/wiki/Jan_Suraaj_Party#/media/File:Logo_of_Jan_Suraaj.jpg" alt="Logo" class="h-12 w-12 mr-2">
-            <h1 class="text-xl font-bold text-white">Jansuraj Volunteers</h1>
+            <img src="{% static 'Logo_of_Jan_Suraaj.png' %}" alt="Logo" class="h-32 w-32 absolute -top-2 left-0 transform -translate-y-1/4 rounded-full shadow-lg">
+            <h1 class="ml-40 text-2xl font-semibold text-white tracking-wide">Jansuraj Volunteers</h1>
         </a>
     </div>
 
     <!-- Mobile Menu Button -->
     <button id="menu-toggle" class="md:hidden text-white focus:outline-none">
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <svg class="w-8 h-8 transition-transform duration-300 ease-in-out" id="menu-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"></path>
         </svg>
     </button>
 
     <!-- Navigation Links -->
-    <div id="nav-links" class="hidden md:flex space-x-4">
+    <div id="nav-links" class="hidden md:flex space-x-6">
         {% if user.is_authenticated %}
-            <a href="{% url 'tasks' %}" class="bg-white text-yellow-600 px-4 py-2 rounded-lg hover:bg-yellow-100">Assigned Tasks</a>
-            <a href="{% url 'profile' %}" class="bg-white text-yellow-600 px-4 py-2 rounded-lg hover:bg-yellow-100">Profile</a>
-            <a href="{% url 'logout' %}" class="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 ml-2">Logout</a>
+            <a href="{% url 'tasks' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:bg-yellow-500 hover:shadow-md">Assigned Tasks</a>
+            <a href="{% url 'profile' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:bg-yellow-500 hover:shadow-md">Profile</a>
+            <a href="{% url 'logout' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:bg-yellow-500 hover:shadow-md">Logout</a>
         {% else %}
-            <a href="{% url 'login' %}" class="bg-white text-yellow-600 px-4 py-2 rounded-lg hover:bg-yellow-100">Login</a>
-            <a href="{% url 'register' %}" class="bg-white text-yellow-600 px-4 py-2 rounded-lg hover:bg-yellow-100 ml-2">Register</a>
+            <a href="{% url 'login' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:bg-yellow-500 hover:shadow-md">Login</a>
+            <a href="{% url 'register' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:bg-yellow-500 hover:shadow-md">Register</a>
         {% endif %}
     </div>
 
     <!-- Mobile Menu -->
-    <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-yellow-500 p-4 shadow-lg space-y-2">
+    <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-gray-900 bg-opacity-95 shadow-xl rounded-lg space-y-3 p-5 transition-all duration-300">
         {% if user.is_authenticated %}
-            <a href="{% url 'tasks' %}" class="block text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Assigned Tasks</a>
-            <a href="{% url 'profile' %}" class="block text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Profile</a>
-            <a href="{% url 'logout' %}" class="block bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700">Logout</a>
+            <a href="{% url 'tasks' %}" class="block text-white text-lg px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-200">Assigned Tasks</a>
+            <hr class="border-t border-gray-500">
+            <a href="{% url 'profile' %}" class="block text-white text-lg px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-200">Profile</a>
+            <hr class="border-t border-gray-500">
+            <a href="{% url 'logout' %}" class="block text-white text-lg px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-200">Logout</a>
         {% else %}
-            <a href="{% url 'login' %}" class="block text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Login</a>
-            <a href="{% url 'register' %}" class="block text-white px-4 py-2 rounded-lg hover:bg-yellow-600">Register</a>
+            <a href="{% url 'login' %}" class="block text-white text-lg px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-200">Login</a>
+            <hr class="border-t border-gray-500">
+            <a href="{% url 'register' %}" class="block text-white text-lg px-4 py-2 rounded-lg hover:bg-yellow-600 transition-all duration-200">Register</a>
         {% endif %}
     </div>
 </nav>
 
 <script>
-    document.getElementById('menu-toggle').addEventListener('click', function () {
-        document.getElementById('mobile-menu').classList.toggle('hidden');
+    const menuToggle = document.getElementById('menu-toggle');
+    const mobileMenu = document.getElementById('mobile-menu');
+    const menuIcon = document.getElementById('menu-icon');
+
+    menuToggle.addEventListener('click', function () {
+        mobileMenu.classList.toggle('hidden');
+        menuIcon.classList.toggle('rotate-90'); // Adds animation to the menu button
     });
 </script>

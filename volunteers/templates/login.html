@@ -1,29 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Login - Jansuraj Volunteers</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-white flex flex-col min-h-screen">
-    
-    {% include 'navbar.html' %}  <!-- Navbar added at the top -->
+{% extends 'base.html' %}
+{% load static %}
 
-    <div class="flex justify-center mt-16 flex-grow items-center">
-        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md">
-            <h2 class="text-2xl font-bold text-center mb-6">Login</h2>
-            <form method="POST" class="space-y-4">
-                {% csrf_token %}
-                {{ form.as_p }}
-                <button type="submit" class="w-full bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600">
-                    Login
-                </button>
-            </form>
-            <p class="text-center text-gray-600 mt-4">
-                Don't have an account? <a href="{% url 'register' %}" class="text-yellow-600 font-semibold">Register</a>
-            </p>
-        </div>
+{% block title %}Login - Jansuraj Volunteers{% endblock %}
+
+{% block content %}
+<div class="flex justify-center mt-16 flex-grow items-center px-4">
+    <div class="bg-white shadow-xl rounded-lg p-10 w-full max-w-lg border border-gray-200">
+        <h2 class="text-3xl font-semibold text-center text-gray-800">Login</h2>
+        <hr class="my-4 border-t-2 border-gray-300">
+
+        <form method="POST" class="space-y-6">
+            {% csrf_token %}
+            <div class="space-y-4">
+                {% for field in form %}
+                    <div>
+                        <label for="{{ field.id_for_label }}" class="block text-gray-700 font-medium mb-1">
+                            {{ field.label }}
+                        </label>
+                        {{ field }}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <button type="submit" class="w-full bg-yellow-500 text-white py-3 px-4 rounded-lg text-lg font-semibold hover:bg-yellow-600 transition duration-300">
+                Login
+            </button>
+        </form>
+
+        <p class="text-center text-gray-600 mt-6">
+            Don't have an account? 
+            <a href="{% url 'register' %}" class="text-yellow-600 font-semibold hover:underline">
+                Register
+            </a>
+        </p>
     </div>
-  <!-- Footer -->
-  {% include 'footer.html' %}   
-</body>
-</html>
+</div>
+
+<style>
+    input[type="text"], input[type="password"], input[type="email"] {
+        @apply w-full border border-gray-300 rounded-lg px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500;
+    }
+    input::placeholder {
+        color: #a1a1a1;
+    }
+</style>
+
+{% endblock %}

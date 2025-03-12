@@ -1,62 +1,56 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Jansuraj Volunteers</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-white text-gray-900">
+{% extends 'base.html' %}
+{% load static %}  {# Ensure this is at the top to use {% static %} #}
 
-    {% include 'navbar.html' %}   
-    <div class="mt-16">
-        <!-- Hero Section -->
-        <header class="text-center py-12">
-            <h2 class="text-3xl font-bold">Welcome to Jansuraj Volunteers</h2>
-            <p class="text-lg text-gray-700 mt-2">Join us and make a difference in society.</p>
-        </header>
+{% block title %}Jansuraj Volunteers{% endblock %}
 
-        <!-- Image Carousel -->
-        <div class="relative w-full max-w-4xl mx-auto overflow-hidden">
-            <div class="flex">
-                <img src="/static/image1.jpg" class="w-full h-64 object-cover rounded-lg shadow-md">
-                <img src="/static/image2.jpg" class="w-full h-64 object-cover rounded-lg shadow-md hidden">
-            </div>
+{% block content %}
+<div class="mt-32">
+    <!-- Hero Section -->
+    <header class="text-center py-12">
+        <h2 class="text-3xl font-bold">Welcome to Jansuraj Volunteers</h2>
+        <p class="text-lg text-gray-700 mt-2">Join us and make a difference in society.</p>
+    </header>
+
+    <!-- Image Carousel -->
+    <div class="relative w-full max-w-4xl mx-auto overflow-hidden">
+        <div class="flex">
+            <img src="{% static 'image1.jpg' %}" class="w-full h-64 object-cover rounded-lg shadow-md">
+            <img src="{% static 'image2.jpg' %}" class="w-full h-64 object-cover rounded-lg shadow-md hidden">
         </div>
-
-        <!-- Video Message -->
-        <div class="text-center mt-8">
-            <h3 class="text-2xl font-semibold">A Message from Our Team</h3>
-            <div id="video-container" class="w-full max-w-3xl mx-auto mt-4 rounded-lg shadow-lg"></div>
-        </div>
-
-        <!-- Footer -->
-        {% include 'footer.html' %}   
     </div>
 
-    <script>
-        const videoUrl = "https://youtu.be/TQf-fkbQSss?si=m3SMejoGI6XacYKK";  // Change this URL dynamically if needed
-        const videoContainer = document.getElementById("video-container");
+    <!-- Video Message -->
+    <div class="text-center mt-8">
+        <h3 class="text-2xl font-semibold">A Message from Our Team</h3>
+        <div id="video-container" class="w-full max-w-3xl mx-auto mt-4 rounded-lg shadow-lg"></div>
+    </div>
+</div>
+{% endblock %}
 
-        function isYouTubeUrl(url) {
-            return url.includes("youtube.com") || url.includes("youtu.be");
-        }
+{% block extra_js %}
+<script>
+    const videoUrl = "https://youtu.be/TQf-fkbQSss?si=m3SMejoGI6XacYKK";  // Change this URL dynamically if needed
+    const videoContainer = document.getElementById("video-container");
 
-        if (isYouTubeUrl(videoUrl)) {
-            const videoId = videoUrl.split("youtu.be/")[1]?.split("?")[0] || videoUrl.split("v=")[1]?.split("&")[0];
-            videoContainer.innerHTML = `
-                <iframe class="w-full h-64 rounded-lg shadow-lg" 
-                    src="https://www.youtube.com/embed/${videoId}" 
-                    frameborder="0" 
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
-                    allowfullscreen>
-                </iframe>`;
-        } else {
-            videoContainer.innerHTML = `
-                <video class="w-full max-w-3xl mx-auto rounded-lg shadow-lg" controls>
-                    <source src="${videoUrl}" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>`;
-        }
-    </script>
+    function isYouTubeUrl(url) {
+        return url.includes("youtube.com") || url.includes("youtu.be");
+    }
 
-</body>
-</html>
+    if (isYouTubeUrl(videoUrl)) {
+        const videoId = videoUrl.split("youtu.be/")[1]?.split("?")[0] || videoUrl.split("v=")[1]?.split("&")[0];
+        videoContainer.innerHTML = `
+            <iframe class="w-full h-64 rounded-lg shadow-lg" 
+                src="https://www.youtube.com/embed/${videoId}" 
+                frameborder="0" 
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                allowfullscreen>
+            </iframe>`;
+    } else {
+        videoContainer.innerHTML = `
+            <video class="w-full max-w-3xl mx-auto rounded-lg shadow-lg" controls>
+                <source src="${videoUrl}" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>`;
+    }
+</script>
+{% endblock %}

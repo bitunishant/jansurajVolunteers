@@ -1,114 +1,122 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <title>Volunteer Registration</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-</head>
-<body class="bg-gray-100 flex flex-col min-h-screen">
-    {% include 'navbar.html' %}
-    
-    <div class="flex justify-center flex-grow mt-16">
-        <div class="bg-white shadow-lg rounded-lg p-8 w-full max-w-md border border-gray-300"> 
-            <h2 class="text-2xl font-bold text-center mb-6">REGISTER AS A VOLUNTEER</h2>
+{% extends 'base.html' %}
+{% load static %}
 
-            <!-- Success and Error Messages -->
-            {% if messages %}
-                {% for message in messages %}
-                    <div class="p-4 mb-4 text-white {{ message.tags }} rounded-lg" role="alert">
-                        {{ message }}
-                    </div>
-                {% endfor %}
-            {% endif %}
+{% block title %}Volunteer Registration{% endblock %}
 
-            <form method="POST" class="space-y-4" id="registrationForm">
-                {% csrf_token %}
+{% block content %}
+<div class="flex justify-center mt-16 flex-grow items-center px-4">
+    <div class="bg-white shadow-xl rounded-lg p-10 w-full max-w-lg border border-gray-200">
+        <h2 class="text-3xl font-semibold text-center text-gray-800">REGISTER AS A VOLUNTEER</h2>
+        <hr class="my-4 border-t-2 border-gray-300">
 
-                <h3 class="text-lg font-semibold">Account Details</h3>
+        <!-- Success and Error Messages -->
+        {% if messages %}
+            {% for message in messages %}
+                <div class="p-4 mb-4 text-white {{ message.tags }} rounded-lg" role="alert">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+
+        <form method="POST" class="space-y-6" id="registrationForm">
+            {% csrf_token %}
+
+            <h3 class="text-lg font-semibold text-gray-800">Account Details</h3>
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-gray-700">Username <span class="text-red-500">*</span></label>
+                    <label class="block text-gray-700 font-medium mb-1">Username <span class="text-red-500">*</span></label>
                     {{ user_form.username }}
                     <p class="text-red-500 text-sm">{{ user_form.username.errors }}</p>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Email <span class="text-red-500">*</span></label>
+                    <label class="block text-gray-700 font-medium mb-1">Email <span class="text-red-500">*</span></label>
                     {{ user_form.email }}
                     <p class="text-red-500 text-sm">{{ user_form.email.errors }}</p>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Password <span class="text-red-500">*</span></label>
+                    <label class="block text-gray-700 font-medium mb-1">Password <span class="text-red-500">*</span></label>
                     {{ user_form.password }}
                     <p class="text-red-500 text-sm">{{ user_form.password.errors }}</p>
                 </div>
+            </div>
 
-                <h3 class="text-lg font-semibold">Personal Details</h3>
+            <h3 class="text-lg font-semibold text-gray-800">Personal Details</h3>
+            <div class="space-y-4">
                 <div>
-                    <label class="block text-gray-700">Full Name <span class="text-red-500">*</span></label>
+                    <label class="block text-gray-700 font-medium mb-1">Full Name <span class="text-red-500">*</span></label>
                     {{ profile_form.name }}
                     <p class="text-red-500 text-sm">{{ profile_form.name.errors }}</p>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Gender <span class="text-red-500">*</span></label>
+                    <label class="block text-gray-700 font-medium mb-1">Gender <span class="text-red-500">*</span></label>
                     {{ profile_form.gender }}
                     <p class="text-red-500 text-sm">{{ profile_form.gender.errors }}</p>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Age <span class="text-red-500">*</span></label>
+                    <label class="block text-gray-700 font-medium mb-1">Age <span class="text-red-500">*</span></label>
                     {{ profile_form.age }}
                     <p class="text-red-500 text-sm">{{ profile_form.age.errors }}</p>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Village</label>
+                    <label class="block text-gray-700 font-medium mb-1">Village</label>
                     {{ profile_form.village }}
                 </div>
                 <div>
-                    <label class="block text-gray-700">Block</label>
+                    <label class="block text-gray-700 font-medium mb-1">Block</label>
                     {{ profile_form.block }}
                 </div>
                 <div>
-                    <label class="block text-gray-700">District</label>
+                    <label class="block text-gray-700 font-medium mb-1">District</label>
                     {{ profile_form.district }}
                 </div>
                 <div>
-                    <label class="block text-gray-700">State</label>
+                    <label class="block text-gray-700 font-medium mb-1">State</label>
                     {{ profile_form.state }}
                 </div>
                 <div>
-                    <label class="block text-gray-700">Pin Code <span class="text-red-500">*</span></label>
+                    <label class="block text-gray-700 font-medium mb-1">Pin Code <span class="text-red-500">*</span></label>
                     {{ profile_form.pin_code }}
                     <p class="text-red-500 text-sm">{{ profile_form.pin_code.errors }}</p>
                 </div>
                 <div>
-                    <label class="block text-gray-700">Contribution Area</label>
+                    <label class="block text-gray-700 font-medium mb-1">Contribution Area</label>
                     {{ profile_form.contribution_area }}
                 </div>
+            </div>
 
-                <button type="submit" class="w-full bg-yellow-500 text-white py-2 px-4 rounded-lg hover:bg-yellow-600">
-                    Register
-                </button>
-            </form>
-        </div>
+            <button type="submit" class="w-full bg-yellow-500 text-white py-3 px-4 rounded-lg text-lg font-semibold hover:bg-yellow-600 transition duration-300">
+                Register
+            </button>
+        </form>
     </div>
+</div>
 
-    <script>
-        document.getElementById("registrationForm").addEventListener("submit", function(event) {
-            let errors = false;
-            let fields = ["username", "email", "password", "age", "pin_code"];
-            fields.forEach(field => {
-                let input = document.querySelector(`[name="${field}"]`);
-                if (input && input.value.trim() === "") {
-                    errors = true;
-                    input.classList.add("border-red-500");
-                    let errorText = document.createElement("p");
-                    errorText.className = "text-red-500 text-sm";
-                    errorText.innerText = "This field is required";
-                    input.parentNode.appendChild(errorText);
-                }
-            });
-            
-            if (errors) event.preventDefault();
+<style>
+    input[type="text"], input[type="password"], input[type="email"], select {
+        @apply w-full border border-gray-300 rounded-lg px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500;
+    }
+    input::placeholder {
+        color: #a1a1a1;
+    }
+</style>
+
+<script>
+    document.getElementById("registrationForm").addEventListener("submit", function(event) {
+        let errors = false;
+        let fields = ["username", "email", "password", "age", "pin_code"];
+        fields.forEach(field => {
+            let input = document.querySelector(`[name="${field}"]`);
+            if (input && input.value.trim() === "") {
+                errors = true;
+                input.classList.add("border-red-500");
+                let errorText = document.createElement("p");
+                errorText.className = "text-red-500 text-sm";
+                errorText.innerText = "This field is required";
+                input.parentNode.appendChild(errorText);
+            }
         });
-    </script>
-      <!-- Footer -->
-      {% include 'footer.html' %}   
-</body>
-</html>
+
+        if (errors) event.preventDefault();
+    });
+</script>
+{% endblock %}
