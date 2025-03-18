@@ -24,12 +24,29 @@ class UserRegistrationForm(forms.ModelForm):
         "class": "input w-full border border-gray-300 rounded-lg px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500",
         "placeholder": "Enter your password"
     }))
+    confirm_password = forms.CharField(widget=forms.PasswordInput(attrs={
+        "class": "input w-full border border-gray-300 rounded-lg px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500",
+        "placeholder": "Confirm your password"
+    }))
 
     class Meta:
         model = User
         fields = ['username', 'email', 'password']
 
+    def clean(self):
+        cleaned_data = super().clean()
+        password = cleaned_data.get("password")
+        confirm_password = cleaned_data.get("confirm_password")
+
+        if password and confirm_password and password != confirm_password:
+            raise forms.ValidationError("Passwords do not match")
+
+
 class UserProfileForm(forms.ModelForm):
+    phone_number = forms.CharField(widget=forms.TextInput(attrs={
+        'class': "input w-full border border-gray-300 rounded-lg px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500",
+        'placeholder': 'Phone Number'
+    }))
     gender = forms.ChoiceField(choices=GENDER_CHOICES, widget=forms.Select(attrs={
         'class': "input w-full border border-gray-300 rounded-lg px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
     }))
@@ -39,7 +56,7 @@ class UserProfileForm(forms.ModelForm):
 
     class Meta:
         model = UserProfile
-        fields = ['name', 'gender', 'age', 'village', 'block', 'district', 'state', 'pin_code', 'contribution_area']
+        fields = ['name', 'phone_number', 'gender', 'age', 'village', 'block', 'district', 'state', 'pin_code', 'contribution_area']
         widgets = {
             'name': forms.TextInput(attrs={
                 'class': "input w-full border border-gray-300 rounded-lg px-4 py-2 text-lg focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500",

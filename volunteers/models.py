@@ -18,6 +18,7 @@ class UserProfile(models.Model):
     name = models.CharField(max_length=100)
     gender = models.CharField(max_length=20)  # No choices here
     age = models.IntegerField()
+    phone_number = models.CharField(max_length=15, blank=True, null=True)  # New field added
     village = models.CharField(max_length=100)
     block = models.CharField(max_length=100)
     district = models.CharField(max_length=100)

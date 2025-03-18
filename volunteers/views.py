@@ -9,22 +9,29 @@ from .forms import UserRegistrationForm, UserProfileForm,CustomAuthenticationFor
 def home(request):
     return render(request, 'home.html')
 
-# Register View
+from django.db import IntegrityError
+from django.contrib import messages
+
 def register(request):
     if request.method == 'POST':
         user_form = UserRegistrationForm(request.POST)
         profile_form = UserProfileForm(request.POST)
         if user_form.is_valid() and profile_form.is_valid():
-            user = user_form.save(commit=False)
-            user.set_password(user_form.cleaned_data['password'])  # Hash the password
-            user.save()
+            try:
+                user = user_form.save(commit=False)
+                user.set_password(user_form.cleaned_data['password'])
+                user.save()
 
-            profile = profile_form.save(commit=False)
-            profile.user = user  # Link profile to user
-            profile.save()
+                profile = profile_form.save(commit=False)
+                profile.user = user
+                profile.save()
 
-            login(request, user)  # Auto-login after registration
-            return redirect('home')
+                login(request, user)
+                return redirect('tasks')
+            except IntegrityError:
+                messages.error(request, "A user with this email already exists.")
+        else:
+            messages.error(request, "Please correct the errors below.")
     else:
         user_form = UserRegistrationForm()
         profile_form = UserProfileForm()
@@ -38,7 +45,7 @@ def user_login(request):
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("tasks")  # Redirect to profile after login
+            return redirect("tasks")  # Redirect to tasks after login
     else:
         form = CustomAuthenticationForm()
 
