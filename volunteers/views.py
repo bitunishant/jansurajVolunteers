@@ -1,16 +1,14 @@
-from django.shortcuts import render, redirect
-from django.contrib.auth import login, logout, authenticate
-from django.contrib.auth.forms import AuthenticationForm
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth import login, logout
 from django.contrib.auth.decorators import login_required
-from .models import Task, UserProfile
-from .forms import UserRegistrationForm, UserProfileForm,CustomAuthenticationForm
+from django.contrib import messages
+from .models import Task, UserProfile, AvailablePool, Team
+from .forms import UserRegistrationForm, UserProfileForm, CustomAuthenticationForm
 
-# Home Page View
 def home(request):
     return render(request, 'home.html')
 
 from django.db import IntegrityError
-from django.contrib import messages
 
 def register(request):
     if request.method == 'POST':
@@ -25,7 +23,7 @@ def register(request):
                 profile = profile_form.save(commit=False)
                 profile.user = user
                 profile.save()
-
+                assign_team(profile)
                 login(request, user)
                 return redirect('tasks')
             except IntegrityError:
@@ -38,33 +36,44 @@ def register(request):
 
     return render(request, 'register.html', {'user_form': user_form, 'profile_form': profile_form})
 
-# Login View
 def user_login(request):
     if request.method == "POST":
         form = CustomAuthenticationForm(request, data=request.POST)
         if form.is_valid():
             user = form.get_user()
             login(request, user)
-            return redirect("tasks")  # Redirect to tasks after login
+            return redirect("tasks")
     else:
         form = CustomAuthenticationForm()
 
     return render(request, "login.html", {"form": form})
 
-# Logout View
 @login_required
 def user_logout(request):
     logout(request)
     return redirect("login")
 
-# Profile View
 @login_required
 def profile(request):
-    user_profile = UserProfile.objects.get(user=request.user)
+    user_profile = get_object_or_404(UserProfile, user=request.user)
     return render(request, "profile.html", {"profile": user_profile})
 
-# View Assigned Tasks
 @login_required
 def tasks(request):
     tasks = Task.objects.filter(assigned_to=request.user)
     return render(request, 'tasks.html', {'tasks': tasks})
+
+def assign_team(volunteer):
+    all_teams = Team.objects.all()
+    matching_team = None
+
+    for team in all_teams:
+        if volunteer.pin_code in team.get_serving_pincodes():  # Using new method to parse CSV
+            matching_team = team
+            break
+
+    if matching_team:
+        volunteer.team = matching_team
+        volunteer.save()
+    else:
+        AvailablePool.objects.create(volunteer=volunteer)
