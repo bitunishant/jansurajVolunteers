@@ -36,9 +36,12 @@ class Task(models.Model):
     description = models.TextField()
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
+    team = models.ForeignKey('Team', on_delete=models.CASCADE, null=True, blank=True)  # Allow NULL values
 
     def __str__(self):
         return self.title
+
+
 
 class AvailablePool(models.Model):
     volunteer = models.OneToOneField(UserProfile, on_delete=models.CASCADE)

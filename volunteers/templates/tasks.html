@@ -13,7 +13,8 @@
                 <table class="min-w-full bg-white border border-gray-300">
                     <thead class="bg-gray-100 text-black">
                         <tr>
-                            <th class="py-2 px-4 border">#</th>
+                            <th class="py-2 px-4 border">S.N</th>
+                            <th class="py-2 px-4 border">ID</th>
                             <th class="py-2 px-4 border">Title</th>
                             <th class="py-2 px-4 border">Description</th>
                             <th class="py-2 px-4 border">Status</th>
@@ -22,7 +23,8 @@
                     <tbody>
                         {% for task in tasks %}
                             <tr class="border-t">
-                                <td class="py-2 px-4 border text-center">{{ forloop.counter }}</td>
+                                <td class="py-2 px-4 border">{{ forloop.counter }}</td>
+                                <td class="py-2 px-4 border">{{ task.id }}</td>
                                 <td class="py-2 px-4 border">{{ task.title }}</td>
                                 <td class="py-2 px-4 border">{{ task.description }}</td>
                                 <td class="py-2 px-4 border text-center">

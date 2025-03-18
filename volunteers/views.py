@@ -77,3 +77,54 @@ def assign_team(volunteer):
         volunteer.save()
     else:
         AvailablePool.objects.create(volunteer=volunteer)
+
+@login_required
+def team_lead_dashboard(request):
+    # Get the logged-in user
+    user = request.user
+
+    # Check if the user is a team lead
+    team = Team.objects.filter(team_lead=user).first()
+
+    if not team:
+        return render(request, 'error.html', {'message': 'You are not a team lead!'})
+
+    # Get all volunteers in this team
+    team_members = UserProfile.objects.filter(team=team)
+
+    # Get tasks assigned to any team member
+    tasks = Task.objects.filter(assigned_to__in=team_members.values_list('user', flat=True))
+
+    return render(request, 'team_lead_dashboard.html', {'team': team, 'team_members': team_members, 'tasks': tasks})
+from django.shortcuts import render, redirect, get_object_or_404
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .models import Team, Task, User
+
+@login_required
+def create_task(request, team_id):
+    team = get_object_or_404(Team, id=team_id)
+    
+    # Ensure the logged-in user is the team lead
+    if request.user != team.team_lead:
+        messages.error(request, "You are not authorized to create tasks for this team.")
+        return redirect(request.META.get('HTTP_REFERER', f'/team-lead-dashboard/{team.id}/'))
+    
+    if request.method == "POST":
+        title = request.POST.get("title")
+        assigned_to_id = request.POST.get("assigned_to")
+        assigned_to = get_object_or_404(User, id=assigned_to_id)
+
+        # Ensure the assigned user is part of the team
+        if not UserProfile.objects.filter(user=assigned_to, team=team).exists():
+            messages.error(request, "Selected user is not part of the team.")
+            return redirect(request.META.get('HTTP_REFERER', f'/team-lead-dashboard/{team.id}/'))
+
+        # Create Task
+        Task.objects.create(title=title, assigned_to=assigned_to, team=team)
+        messages.success(request, "Task created successfully!")
+        
+        return redirect(request.META.get('HTTP_REFERER', f'/team-lead-dashboard/{team.id}/'))
+    
+    return redirect(f'/team-lead-dashboard/{team.id}/')
+
