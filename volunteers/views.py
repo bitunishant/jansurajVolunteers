@@ -244,4 +244,8 @@ def generate_share_image(request, hours):
     img.save(response, "PNG")
     return response
 
+# views.py
+from django.shortcuts import render
 
+def product_list(request):
+    return render(request, 'product_list.html')

@@ -18,6 +18,9 @@
 
     <!-- Navigation Links -->
     <div id="nav-links" class="hidden md:flex space-x-6">
+        <!-- Jansuraj Store (Always Visible for Both Logged-In and Non-Logged-In Users) -->
+        <a href="{% url 'products' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:underline hover:shadow-md">Jansuraj Store</a>
+   
         {% if user.is_authenticated %}
             <a href="{% url 'tasks' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:underline hover:shadow-md">Assigned Tasks</a>
             
@@ -32,10 +35,14 @@
             <a href="{% url 'login' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:underline hover:shadow-md">Login</a>
             <a href="{% url 'register' %}" class="text-white text-lg px-4 py-1 rounded-lg transition-all duration-200 hover:underline hover:shadow-md">Register</a>
         {% endif %}
-    </div>
+        
+         </div>
 
     <!-- Mobile Menu -->
     <div id="mobile-menu" class="hidden md:hidden absolute top-16 left-0 w-full bg-gray-900 bg-opacity-95 shadow-xl rounded-lg space-y-3 p-5 transition-all duration-300">
+        <!-- Jansuraj Store (Always Visible for Both Logged-In and Non-Logged-In Users) -->
+        <a href="{% url 'products' %}" class="block text-white text-lg px-4 py-2 rounded-lg transition-all duration-200">Jansuraj Store</a>
+        <hr class="border-t border-gray-500">
         {% if user.is_authenticated %}
             <a href="{% url 'tasks' %}" class="block text-white text-lg px-4 py-2 rounded-lg transition-all duration-200">Assigned Tasks</a>
             <hr class="border-t border-gray-500">
@@ -54,6 +61,8 @@
             <hr class="border-t border-gray-500">
             <a href="{% url 'register' %}" class="block text-white text-lg px-4 py-2 rounded-lg transition-all duration-200">Register</a>
         {% endif %}
+        
+
     </div>
 </nav>
 
