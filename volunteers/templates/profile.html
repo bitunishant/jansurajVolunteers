@@ -8,25 +8,74 @@
     <div class="bg-white shadow-xl rounded-lg p-10 w-full max-w-3xl border border-gray-200">
         <h2 class="text-3xl font-semibold text-center text-gray-800">Your Profile</h2>
 
-        <!-- Contributed for Better Bihar Field -->
         <p class="text-xl font-bold text-center text-green-700 mt-2">
             Contributed for Better Bihar: {{ hours_contributed|default:"0" }} hours
         </p>
 
+        <div class="mt-4 text-center justify-center flex">
+            <button onclick="openModal()" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded flex items-center justify-center space-x-2">
+                <i class="fas fa-share-alt text-lg"></i> 
+                <span>Share Profile</span>
+            </button>
+        </div>
+
         <hr class="my-4 border-t-2 border-gray-300">
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 text-lg font-medium text-gray-700">
-            <p><span class="font-semibold text-gray-900">Username:</span> {{ profile.user }}</p>
-            <p><span class="font-semibold text-gray-900">Name:</span> {{ profile.name }}</p>
-            <p><span class="font-semibold text-gray-900">Gender:</span> {{ profile.gender }}</p>
-            <p><span class="font-semibold text-gray-900">Age:</span> {{ profile.age }}</p>
-            <p><span class="font-semibold text-gray-900">Village:</span> {{ profile.village }}</p>
-            <p><span class="font-semibold text-gray-900">Block:</span> {{ profile.block }}</p>
-            <p><span class="font-semibold text-gray-900">District:</span> {{ profile.district }}</p>
-            <p><span class="font-semibold text-gray-900">State:</span> {{ profile.state }}</p>
-            <p><span class="font-semibold text-gray-900">Pin Code:</span> {{ profile.pin_code }}</p>
-            <p class="col-span-1 md:col-span-2"><span class="font-semibold text-gray-900">Contribution Area:</span> {{ profile.contribution_area }}</p>
+            <p><span class="font-semibold text-gray-900">Username:</span> {{ profile.user|default:"N/A" }}</p>
+            <p><span class="font-semibold text-gray-900">Name:</span> {{ profile.name|default:"N/A" }}</p>
+            <p><span class="font-semibold text-gray-900">Gender:</span> {{ profile.gender|default:"N/A" }}</p>
+            <p><span class="font-semibold text-gray-900">Age:</span> {{ profile.age|default:"N/A" }}</p>
+            <p><span class="font-semibold text-gray-900">Village:</span> {{ profile.village|default:"N/A" }}</p>
+            <p><span class="font-semibold text-gray-900">Block:</span> {{ profile.block|default:"N/A" }}</p>
+            <p><span class="font-semibold text-gray-900">District:</span> {{ profile.district|default:"N/A" }}</p>
+            <p><span class="font-semibold text-gray-900">State:</span> {{ profile.state|default:"N/A" }}</p>
+            <p><span class="font-semibold text-gray-900">Pin Code:</span> {{ profile.pin_code|default:"N/A" }}</p>
+            <p class="col-span-1 md:col-span-2"><span class="font-semibold text-gray-900">Contribution Area:</span> {{ profile.contribution_area|default:"N/A" }}</p>
         </div>
     </div>
 </div>
+
+<!-- Modal Structure -->
+<div id="share-modal" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex justify-center items-center hidden">
+    <div class="bg-white p-6 rounded-lg shadow-lg w-96 relative">
+        <button onclick="closeModal()" class="absolute top-2 right-2 text-gray-600 hover:text-gray-800">
+            <i class="fas fa-times text-xl"></i>
+        </button>
+        <h2 class="text-lg font-semibold text-gray-800 text-center">Share Profile</h2>
+        <div class="flex justify-center space-x-4 mt-4 text-3xl">
+            <a id="whatsapp-share" href="#" target="_blank" class="text-green-600"><i class="fab fa-whatsapp"></i></a>
+            <a id="facebook-share" href="#" target="_blank" class="text-blue-600"><i class="fab fa-facebook"></i></a>
+            <a id="twitter-share" href="#" target="_blank" class="text-blue-400"><i class="fab fa-twitter"></i></a>
+            <a id="linkedin-share" href="#" target="_blank" class="text-blue-700"><i class="fab fa-linkedin"></i></a>
+            <a id="instagram-share" href="#" target="_blank" class="text-pink-600"><i class="fab fa-instagram"></i></a>
+        </div>
+    </div>
+</div>
+
+<script>
+    function openModal() {
+        document.getElementById('share-modal').classList.remove('hidden');
+    }
+
+    function closeModal() {
+        document.getElementById('share-modal').classList.add('hidden');
+    }
+
+    document.addEventListener("DOMContentLoaded", function () {
+        const hoursContributed = {{ hours_contributed|default:0 }};
+        const shareText = `I contributed ${hoursContributed} hours for Better Bihar. Did you? Register as a volunteer and make Bihar great again.`;
+        const registerLink = `${window.location.origin}/register/`;
+        const fullMessage = `${shareText} ${registerLink}`;
+
+        document.getElementById("whatsapp-share").href = `https://api.whatsapp.com/send?text=${encodeURIComponent(fullMessage)}`;
+        document.getElementById("facebook-share").href = `https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(registerLink)}&quote=${encodeURIComponent(shareText)}`;
+        document.getElementById("twitter-share").href = `https://twitter.com/intent/tweet?url=${encodeURIComponent(registerLink)}&text=${encodeURIComponent(shareText)}`;
+        document.getElementById("linkedin-share").href = `https://www.linkedin.com/sharing/share-offsite/?url=${encodeURIComponent(registerLink)}`;
+        document.getElementById("instagram-share").href = `https://www.instagram.com/`; // Instagram doesn't support direct text sharing, users must copy manually
+    });
+</script>
+
+<!-- FontAwesome for icons -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
 {% endblock %}

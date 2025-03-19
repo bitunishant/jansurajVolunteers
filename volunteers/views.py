@@ -13,6 +13,11 @@ from django.contrib.auth.decorators import login_required
 from django.shortcuts import render, get_object_or_404
 from .models import UserProfile, ContributedHours
 from django.db.models import Sum  # Import Sum for aggregation
+from django.http import HttpResponse
+from PIL import Image, ImageDraw, ImageFont
+import os
+from django.conf import settings
+
 
 def home(request):
     return render(request, 'home.html')
@@ -177,5 +182,26 @@ def complete_task(request, task_id):
             return JsonResponse({"success": False, "error": "Task not found"})
         except Exception as e:
             return JsonResponse({"success": False, "error": str(e)})
+        
+
+def generate_share_image(request, hours):
+    # Create an image (size: 600x300)
+    img = Image.new('RGB', (600, 300), color=(255, 255, 255))
+    draw = ImageDraw.Draw(img)
+
+    # Load a font (update path to a valid font file in your system)
+    font_path = os.path.join(settings.BASE_DIR, 'static/fonts/arial.ttf')  # Adjust path
+    font = ImageFont.truetype(font_path, 30)
+
+    # Draw text
+    text = f"I contributed {hours} hours for Better Bihar.\nDid you?"
+    subtext = "Register as a volunteer and make Bihar great again!"
+    draw.text((50, 100), text, fill=(0, 0, 0), font=font)
+    draw.text((50, 200), subtext, fill=(0, 0, 255), font=font)
+
+    # Save image to response
+    response = HttpResponse(content_type="image/png")
+    img.save(response, "PNG")
+    return response
 
 
