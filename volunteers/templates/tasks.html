@@ -17,7 +17,9 @@
                             <th class="py-2 px-4 border">ID</th>
                             <th class="py-2 px-4 border">Title</th>
                             <th class="py-2 px-4 border">Description</th>
+                            <th class="py-2 px-4 border">Assigned Hours</th>
                             <th class="py-2 px-4 border">Status</th>
+                            <th class="py-2 px-4 border">Action</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -27,6 +29,7 @@
                                 <td class="py-2 px-4 border">{{ task.id }}</td>
                                 <td class="py-2 px-4 border">{{ task.title }}</td>
                                 <td class="py-2 px-4 border">{{ task.description }}</td>
+                                <td class="py-2 px-4 border">{{ task.allocatedHours }}</td>
                                 <td class="py-2 px-4 border text-center">
                                     {% if task.completed %}
                                         <span class="text-green-600 font-bold">Completed</span>
@@ -34,11 +37,72 @@
                                         <span class="text-red-600 font-bold">Pending</span>
                                     {% endif %}
                                 </td>
+                                <td class="py-2 px-4 border text-center">
+                                    {% if not task.completed %}
+                                        <button class="bg-blue-500 text-white px-3 py-1 rounded action-btn"
+                                                data-task-id="{{ task.id }}">Complete</button>
+                                    {% endif %}
+                                </td>
                             </tr>
                         {% endfor %}
                     </tbody>
                 </table>
             </div>
+
+            <!-- Modal -->
+            <div id="commentModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 flex items-center justify-center">
+                <div class="bg-white p-6 rounded shadow-lg">
+                    <h3 class="text-lg font-semibold mb-3">Add Comment & Mark as Complete</h3>
+                    <textarea id="taskComment" class="w-full border p-2" placeholder="Enter your comment..."></textarea>
+                    <div class="flex justify-end mt-4">
+                        <button id="closeModal" class="bg-gray-500 text-white px-3 py-1 rounded mr-2">Cancel</button>
+                        <button id="submitComment" class="bg-green-500 text-white px-3 py-1 rounded">Submit</button>
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                document.addEventListener("DOMContentLoaded", function() {
+                    let modal = document.getElementById("commentModal");
+                    let closeModal = document.getElementById("closeModal");
+                    let submitComment = document.getElementById("submitComment");
+                    let taskId = null;
+            
+                    document.querySelectorAll(".action-btn").forEach(button => {
+                        button.addEventListener("click", function() {
+                            taskId = this.getAttribute("data-task-id");
+                            modal.classList.remove("hidden");
+                        });
+                    });
+            
+                    closeModal.addEventListener("click", function() {
+                        modal.classList.add("hidden");
+                    });
+            
+                    submitComment.addEventListener("click", function() {
+                        let comment = document.getElementById("taskComment").value;
+                        let userId = "{{ request.user.id }}";  // Pass logged-in user ID
+            
+                        fetch(`/complete-task/${taskId}/`, {
+                            method: "POST",
+                            headers: {
+                                "Content-Type": "application/json",
+                                "X-CSRFToken": "{{ csrf_token }}"
+                            },
+                            body: JSON.stringify({ comment: comment, user_id: userId })  // Include user_id
+                        }).then(response => response.json())
+                          .then(data => {
+                              if (data.success) {
+                                  location.reload();
+                              } else {
+                                  alert("Error: " + data.error);
+                              }
+                          });
+                    });
+                });
+            </script>
+            
+
         {% else %}
             <p class="text-center text-gray-600">No tasks assigned yet.</p>
         {% endif %}

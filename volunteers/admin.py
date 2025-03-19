@@ -73,3 +73,27 @@ class AvailablePoolAdmin(admin.ModelAdmin):
             messages.error(request, "No matching team found for this user.")
     
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/admin/'))
+
+from django.contrib import admin
+from .models import ContributedHours
+
+@admin.register(ContributedHours)
+class ContributedHoursAdmin(admin.ModelAdmin):
+    list_display = ('user', 'user_email', 'task', 'task_description', 'ContributedHours','date')
+    search_fields = ('user__username', 'user__email', 'task__title')
+    list_filter = ('date', 'user')
+
+    def user_email(self, obj):
+        return obj.user.email  # Display user's email in the admin panel
+    user_email.short_description = "User Email"
+
+    def task_description(self, obj):
+        return obj.task.description  # Assuming Task model has a 'description' field
+    task_description.short_description = "Task Description"
+
+    def ContributedHours(self, obj):
+        return obj.task.allocatedHours  # Assuming Task model has a 'description' field
+    ContributedHours.short_description = "ContributedHours"
+
+
+

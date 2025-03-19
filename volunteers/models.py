@@ -37,6 +37,8 @@ class Task(models.Model):
     assigned_to = models.ForeignKey(User, on_delete=models.CASCADE)
     completed = models.BooleanField(default=False)
     team = models.ForeignKey('Team', on_delete=models.CASCADE, null=True, blank=True)  # Allow NULL values
+    allocatedHours = models.PositiveIntegerField(default=1,null=False, blank=False) 
+    comments = models.TextField(null=True, blank=True)  
 
     def __str__(self):
         return self.title
@@ -51,3 +53,10 @@ class AvailablePool(models.Model):
         """Fallback in case `volunteer.user.username` is not available"""
         username = getattr(self.volunteer.user, "username", "Unknown")
         return f"Available: {username}"
+class ContributedHours(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    task = models.ForeignKey(Task, on_delete=models.CASCADE)
+    date = models.DateField()
+
+    def __str__(self):
+        return f"{self.user.username} - {self.task.title}"
