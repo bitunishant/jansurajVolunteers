@@ -96,6 +96,29 @@ def assign_team(volunteer):
     else:
         AvailablePool.objects.create(volunteer=volunteer)
 
+# @login_required
+# def team_lead_dashboard(request):
+#     # Get the logged-in user
+#     user = request.user
+
+#     # Check if the user is a team lead
+#     team = Team.objects.filter(team_lead=user).first()
+
+#     if not team:
+#         return render(request, 'error.html', {'message': 'You are not a team lead!'})
+
+#     # Get all volunteers in this team
+#     team_members = UserProfile.objects.filter(team=team)
+
+#     # Get tasks assigned to any team member
+#     tasks = Task.objects.filter(assigned_to__in=team_members.values_list('user', flat=True))
+
+#     return render(request, 'team_lead_dashboard.html', {'team': team, 'team_members': team_members, 'tasks': tasks})
+from django.core.paginator import Paginator
+from django.contrib.auth.decorators import login_required
+from django.shortcuts import render
+from .models import Team, UserProfile, Task
+
 @login_required
 def team_lead_dashboard(request):
     # Get the logged-in user
@@ -108,12 +131,29 @@ def team_lead_dashboard(request):
         return render(request, 'error.html', {'message': 'You are not a team lead!'})
 
     # Get all volunteers in this team
-    team_members = UserProfile.objects.filter(team=team)
+    team_members_list = UserProfile.objects.filter(team=team)
 
     # Get tasks assigned to any team member
-    tasks = Task.objects.filter(assigned_to__in=team_members.values_list('user', flat=True))
+    tasks_list = Task.objects.filter(assigned_to__in=team_members_list.values_list('user', flat=True))
 
-    return render(request, 'team_lead_dashboard.html', {'team': team, 'team_members': team_members, 'tasks': tasks})
+    # Pagination setup
+    team_members_paginator = Paginator(team_members_list, 5)  # 5 members per page
+    tasks_paginator = Paginator(tasks_list, 5)  # 5 tasks per page
+
+    # Get page numbers from request
+    team_members_page_number = request.GET.get('members_page')
+    tasks_page_number = request.GET.get('tasks_page')
+
+    # Get paginated objects
+    team_members = team_members_paginator.get_page(team_members_page_number)
+    tasks = tasks_paginator.get_page(tasks_page_number)
+
+    return render(request, 'team_lead_dashboard.html', {
+        'team': team,
+        'team_members': team_members,
+        'tasks': tasks,
+    })
+
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages

@@ -35,8 +35,12 @@ class TeamAdmin(admin.ModelAdmin):
 
 @admin.register(AvailablePool)
 class AvailablePoolAdmin(admin.ModelAdmin):
-    list_display = ('volunteer', 'assign_team_link')
+    list_display = ('volunteer_username','volunteer', 'assign_team_link')
     search_fields = ('volunteer__user__username', 'volunteer__pin_code')
+    readonly_fields = ('volunteer_username',) 
+    def volunteer_username(self, obj):
+        return obj.volunteer.user.username  # Access the username of the related user profile
+    volunteer_username.short_description = 'Username'  # Set a nice label for the column
 
     def assign_team_link(self, obj):
         return format_html('<a href="assign-team/{}/">Assign to Team</a>', obj.id)
@@ -73,7 +77,7 @@ class AvailablePoolAdmin(admin.ModelAdmin):
             messages.error(request, "No matching team found for this user.")
     
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/admin/'))
-
+    
 from django.contrib import admin
 from .models import ContributedHours
 
