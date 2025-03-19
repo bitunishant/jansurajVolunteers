@@ -7,7 +7,7 @@ from django.contrib import messages
 from .models import Task, UserProfile, AvailablePool, Team
 
 class TaskAdmin(admin.ModelAdmin):
-    list_display = ('title', 'assigned_to', 'team','completed')
+    list_display = ('id','title', 'assigned_to', 'team','completed')
     search_fields = ('title', 'assigned_to__username')
     list_filter = ('completed',)
 
@@ -15,13 +15,13 @@ admin.site.register(Task, TaskAdmin)
 
 @admin.register(UserProfile)
 class UserProfileAdmin(admin.ModelAdmin):
-    list_display = ('user', 'name', 'district', 'state', 'contribution_area', 'team')
+    list_display = ('id','user', 'name', 'district', 'state', 'contribution_area', 'team')
     search_fields = ('name', 'district', 'contribution_area')
     list_filter = ('state', 'contribution_area', 'team')
 
 @admin.register(Team)
 class TeamAdmin(admin.ModelAdmin):
-    list_display = ('name', 'team_lead', 'pincode_list', 'description_preview')
+    list_display = ('id','name', 'team_lead', 'pincode_list', 'description_preview')
     search_fields = ('name', 'team_lead__username', 'serving_pincodes')
     list_filter = ('team_lead',)  # Filter by team leads
     def pincode_list(self, obj):

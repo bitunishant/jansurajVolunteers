@@ -81,7 +81,7 @@
                 <label for="assigned_to" class="block text-gray-700 font-medium">Assign To</label>
                 <select id="assigned_to" name="assigned_to" required class="w-full p-2 border border-gray-300 rounded-lg">
                     {% for user in team_members %}
-                    <option value="{{ user.id }}">{{user.user.username }} - {{ user.user.userprofile.name }}</option>
+                    <option value="{{ user.user.username }}">{{user.user.username }} - {{ user.user.userprofile.name }}</option>
                     {% endfor %}
                 </select>
             </div>

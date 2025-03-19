@@ -104,7 +104,7 @@ from .models import Team, Task, User
 @login_required
 def create_task(request, team_id):
     team = get_object_or_404(Team, id=team_id)
-    
+    print("team_lead",team.team_lead)
     # Ensure the logged-in user is the team lead
     if request.user != team.team_lead:
         messages.error(request, "You are not authorized to create tasks for this team.")
@@ -113,8 +113,9 @@ def create_task(request, team_id):
     if request.method == "POST":
         title = request.POST.get("title")
         assigned_to_id = request.POST.get("assigned_to")
-        assigned_to = get_object_or_404(User, id=assigned_to_id)
-
+        print("assigned_to_id",assigned_to_id)
+        assigned_to = get_object_or_404(User, username=assigned_to_id)
+        print("assigned_to_user",assigned_to.username)
         # Ensure the assigned user is part of the team
         if not UserProfile.objects.filter(user=assigned_to, team=team).exists():
             messages.error(request, "Selected user is not part of the team.")
